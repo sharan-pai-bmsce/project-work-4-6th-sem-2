@@ -1,0 +1,8 @@
+,Murder,Sex Crime,Missing,Robbery,Theft,Public Nuisance,Fraud,Arson,Gun Violence,Harrassment,Human Trafficking,Accident,Others,total
+Male Below 18 Years,0,0,0,6,4,1,1,0,0,0,0,0,0,10
+Male Between 18-30 Years,4,16,2,40,78,55,2,6,21,2,0,11,24,222
+Male Between 30-45 Years,3,0,0,11,16,21,10,0,5,2,0,12,17,91
+Male Between 45-60 Years,0,2,0,1,8,9,5,0,1,0,0,7,5,33
+Male Above 60 Years,0,0,0,0,0,0,1,0,1,2,0,1,0,5
+Male Total,7,18,2,58,106,86,19,6,28,6,0,31,46,361
+Grand Total,7,20,2,60,106,95,20,7,28,11,0,31,53,387
