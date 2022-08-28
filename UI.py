@@ -33,6 +33,7 @@ gcity=None
 gage=None
 columns2=[]
 centroids=None
+subHeading="State-wise"
 # Build your components
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 mytitle = dcc.Markdown(children='')
@@ -42,7 +43,7 @@ dropdown = dcc.Dropdown(options=name_list(),
                         clearable=False)
 age = dcc.Input(placeholder='Enter Age',
                 type='number',value=None)
-subheading1=dcc.Markdown(children="Preinct-wise crime table")
+subheading1=dcc.Markdown(children=subHeading)
 table = dash_table.DataTable(data=None,columns=columns)
 subheading2=dcc.Markdown(children="Points Table")
 pointstable = dash_table.DataTable(data=None,columns=columns2)
@@ -156,6 +157,7 @@ def driver(city,age):
     Output(table,'columns'),
     Output(pointstable,'data'),
     Output(pointstable,'columns'),
+    Output(subheading1,'children'),
     Input(dropdown, 'value'),
     Input(age, 'value'),
     Input(mygraph,'clickData')
@@ -170,6 +172,7 @@ def update_graph(city, age,clickData):
     global gage
     global allPoints
     global columns2
+    global subHeading
     if gage==age and gcity==city and clickData!=None:
         val=None
         if city=='India':
@@ -219,11 +222,13 @@ def update_graph(city, age,clickData):
             val2='properties.state_name'
             zoom=3
             coord=centroids[city]
+            subHeading="State-wise crime table"
         else:
             precincts=json.load(open('./india-state-district.geojson','r'))[city]
             val1='DISTRICT'
             val2='properties.district'
             coord=centroids[city]
+            subHeading="District-wise crime table"
             zoom=5
         fig=px.choropleth_mapbox(crime_data,locations=val1,featureidkey=val2,geojson=precincts,color='total',color_continuous_scale='ylorrd')
         fig.update_geos(fitbounds="locations", visible=False)
@@ -237,7 +242,7 @@ def update_graph(city, age,clickData):
         gage=age
         columns2=[]
             # returned objects are assigned to the component property of the Output
-    return figure,'# '+city,df,columns,allPoints,columns2
+    return figure,'# '+city,df,columns,allPoints,columns2,subHeading
 
 # Run app
 if __name__ == '__main__':
