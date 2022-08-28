@@ -32,6 +32,7 @@ columns=[]
 gcity=None
 gage=None
 columns2=[]
+centroids=None
 # Build your components
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 mytitle = dcc.Markdown(children='')
@@ -75,6 +76,7 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 def helper1(file):
+    global centroids
     if file != None:
         return file
     fileArr=[
@@ -93,6 +95,7 @@ def helper1(file):
         './Crime data-age-related/Theft.csv'
     ]
     file=[]
+    centroids=json.load(open('./centroids.json'))
     for path in fileArr:
         file.append(pd.read_csv(path))
     return file
@@ -194,8 +197,8 @@ def update_graph(city, age,clickData):
         if age==None:
             age=18
         crime_data,points=driver(city,age)
-        print(city)
-        print(type(city))
+        # print(city)
+        # print(type(city))
         # data=json.load(open(city_list[city][2]))
         crime=crime_data
         allPoints=points
@@ -205,21 +208,27 @@ def update_graph(city, age,clickData):
         # https://plotly.com/python/choropleth-maps/
         val1=None
         val2=None
+        zoom=None
+        coord=None
         if city=='India':
             precincts=json.load(open(city_list[city][0],'r'))
             val1='STATE/UT'
             val2='properties.state_name'
+            zoom=3
+            coord=centroids[city]
         else:
             precincts=json.load(open('./india-state-district.geojson','r'))[city]
             val1='DISTRICT'
             val2='properties.district'
-        fig=px.choropleth_mapbox(crime_data,locations=val1,featureidkey=val2,geojson=precincts,color='total',color_continuous_scale='ylorrd',zoom=4)
+            coord=centroids[city]
+            zoom=5
+        fig=px.choropleth_mapbox(crime_data,locations=val1,featureidkey=val2,geojson=precincts,color='total',color_continuous_scale='ylorrd')
         fig.update_geos(fitbounds="locations", visible=False)
         fig.update_layout(mapbox_style="carto-positron", 
-                        mapbox_zoom=9.5,
-                        mapbox_center={"lat": 20.5937, "lon": 78.9629},
+                        mapbox_zoom=zoom,
+                        mapbox_center={"lat": coord[1], "lon": coord[0]},
                         margin={"r":0,"t":0,"l":0,"b":0},
-                        uirevision='constant')
+                        uirevision='constant',transition_duration=600,transition_easing='linear')
         figure=fig
         gcity=city
         gage=age
