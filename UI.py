@@ -81,6 +81,7 @@ def helper1(file):
         return file
     fileArr=[
         './Crime data-age-related/Accident.csv',
+        './Crime data-age-related/Assault.csv',
         './Crime data-age-related/Arson.csv',
         './Crime data-age-related/Fraud.csv',
         './Crime data-age-related/Gun Violence.csv',
@@ -88,7 +89,7 @@ def helper1(file):
         './Crime data-age-related/Human Trafficking.csv',
         './Crime data-age-related/Missing.csv',
         './Crime data-age-related/Murder.csv',
-        './Crime data-age-related/Others.csv',
+        # './Crime data-age-related/Others.csv',
         './Crime data-age-related/Public Nuisance.csv',
         './Crime data-age-related/Robbery.csv',
         './Crime data-age-related/Sex Crime.csv',
@@ -110,8 +111,10 @@ def driver(city,age):
         crime_data = pd.read_csv(city_list[city][1])
     else:
         crime_data = pd.read_csv('./crime-data/'+city+'.csv')
+    crime_data=crime_data.drop(columns=['Others'])
     # crime_data = crime_data.iloc[:, 1:]
     crimes = crime_data.columns
+    print(crimes)
     li = []
 
     for df in file:
